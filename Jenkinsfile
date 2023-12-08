@@ -13,6 +13,10 @@ pipeline {
         terraform 'Terraform'
     }
 
+    environment {
+        PIP_BREAK_SYSTEM_PACKAGES = 1
+    }
+
     parameters {
         string(name: 'backendDockerTag', defaultValue: '', description: 'Backend docker image tag')
         string(name: 'frontendDockerTag', defaultValue: '', description: 'Frontend docker image tag')
@@ -65,10 +69,10 @@ pipeline {
         stage('Run terraform') {
             steps {
                 dir('Terraform') {                
-                    git branch: 'main', url: 'https://github.com/Panda-Academy-Core-2-0/Terraform'
+                    git branch: 'main', url: 'https://github.com/ukaszzz/Terraform'
                     withAWS(credentials:'AWS', region: 'us-east-1') {
-                            sh 'terraform init -backend-config=bucket=panda-academy-panda-devops-core-n'
-                            sh 'terraform apply -auto-approve -var bucket_name=panda-academy-panda-devops-core-n'
+                            sh 'terraform init -backend-config=bucket=lukasz-zola-panda-devops-core-15'
+                            sh 'terraform apply -auto-approve -var bucket_name=lukasz-zola-panda-devops-core-15'
                             
                     } 
                 }
@@ -90,7 +94,7 @@ pipeline {
     }
     post {
         always {
-            sh "docker down"
+            sh "docker-compose down"
             cleanWs()
         }
     }
